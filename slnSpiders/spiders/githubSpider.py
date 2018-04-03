@@ -1,7 +1,7 @@
 import scrapy
 import logging
-from slnSpiders.items import SlnspidersItem
-
+from scrapy.loader import ItemLoader
+from slnSpiders.items import GithubCatagaryItem
 class GithubSpider(scrapy.Spider):
     name = 'github'
     allow_domains = ["github.com"]
@@ -9,12 +9,26 @@ class GithubSpider(scrapy.Spider):
     start_urls = [
       "https://github.com/explore",
     ]
+    all_the_repo_info = {}
     def parse(self, response):
-      repo_urls = []
-      #//div[contains(@class, 'Collection')]//article
-      for selector in response.xpath("//body//div[4]//div[contains(@class, 'Collection')]//article//a"):
+      req = []
+      for selector in response.xpath("//body//div[4]//h2//a[contains(@class, 'link-gray-dark')]"):
         for i in selector.xpath('@href').extract():
-          if 'network' not in i:
-            url = self.base_url + i
-            repo_urls.append(url)
-            self.logger.info(url)
+          catagart_url = self.base_url + i
+          yield scrapy.Request(catagart_url, callback=self.parseCatagary)
+
+      for url in response.xpath("//body//div[4]//div[contains(@class, 'py-4')]//a//@href").extract():
+        r = self.base_url + url
+        yield scrapy.Request(r, callback=self.parseCatagary)
+
+    def parseCatagary(self, response):
+      page = response.url.split("/")[-1]
+      self.all_the_repo_info[page] = {
+        'repo_urls': [],
+      }
+      for selector in response.xpath("//body//div[4]//div[1]//div[1]//ol[contains(@class, 'repo-list')]//h3//a"):
+        for url in selector.xpath('@href').extract():
+          self.all_the_repo_info[page]['repo_urls'].append(self.base_url + url)
+      for selector in response.xpath("//body//div[4]//div[1]//div[1]//article//h1//a"):
+        for url in selector.xpath('@href').extract():
+          self.all_the_repo_info[page]['repo_urls'].append(self.base_url + url)
