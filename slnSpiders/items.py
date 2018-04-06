@@ -8,11 +8,10 @@
 import scrapy
 
 
-class GithubCatagaryItem(scrapy.Item):
+class GithubCategoryItem(scrapy.Item):
     # name = scrapy.Field()
-    catagary = scrapy.Field()
-    language = scrapy.Field()
+    category = scrapy.Field()
     start = scrapy.Field()
     fork = scrapy.Field()
     author = scrapy.Field()
-    repo = scrapy.Field()
+    name = scrapy.Field()

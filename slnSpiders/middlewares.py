@@ -38,6 +38,5 @@ class RotateUserAgentMiddleware(UserAgentMiddleware):
     def process_request(self, request, spider):
         ua = random.choice(self.user_agent_list)
         if ua:
-            logging.info('Current UserAgent: ' + ua)
             request.headers.setdefault('User-Agent', ua)
         return None
