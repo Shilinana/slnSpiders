@@ -15,13 +15,13 @@ class GithubSpider(scrapy.Spider):
       for selector in response.xpath("//body//div[4]//h2//a[contains(@class, 'link-gray-dark')]"):
         for i in selector.xpath('@href').extract():
           catagart_url = self.base_url + i
-          yield scrapy.Request(catagart_url, callback=self.parseCatagary)
+          yield scrapy.Request(catagart_url, callback=self.parse_categary)
 
-      for url in response.xpath("//body//div[4]//div[contains(@class, 'py-4')]//a//@href").extract():
+      for url in response.xpath("/body//div[4]//div[contains(@class, 'py-4')]//a//@href").extract():
         r = self.base_url + url
-        yield scrapy.Request(r, callback=self.parseCatagary)
+        yield scrapy.Request(r, callback=self.parse_categary)
 
-    def parseCatagary(self, response):
+    def parse_categary(self, response):
       page = response.url.split("/")[-1]
       self.all_the_repo_info[page] = {
         'repo_urls': [],
@@ -32,3 +32,4 @@ class GithubSpider(scrapy.Spider):
       for selector in response.xpath("//body//div[4]//div[1]//div[1]//article//h1//a"):
         for url in selector.xpath('@href').extract():
           self.all_the_repo_info[page]['repo_urls'].append(self.base_url + url)
+    # def parse_repo_info(self, response):
