@@ -8,7 +8,10 @@
 import scrapy
 
 
-class SlnspidersItem(scrapy.Item):
-    # define the fields for your item here like:
+class GithubCategoryItem(scrapy.Item):
     # name = scrapy.Field()
-    pass
+    category = scrapy.Field()
+    start = scrapy.Field()
+    fork = scrapy.Field()
+    author = scrapy.Field()
+    name = scrapy.Field()
