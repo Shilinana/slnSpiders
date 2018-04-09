@@ -9,9 +9,9 @@ import scrapy
 
 
 class GithubCategoryItem(scrapy.Item):
-    # name = scrapy.Field()
     category = scrapy.Field()
     start = scrapy.Field()
     fork = scrapy.Field()
     author = scrapy.Field()
     name = scrapy.Field()
+    url = scrapy.Field()
